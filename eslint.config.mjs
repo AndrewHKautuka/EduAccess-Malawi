@@ -3,11 +3,13 @@ import nextTs from "eslint-config-next/typescript"
 import prettierConfig from "eslint-config-prettier/flat"
 import prettier from "eslint-plugin-prettier"
 import { defineConfig, globalIgnores } from "eslint/config"
+import importZod from "eslint-plugin-import-zod"
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   prettierConfig,
+  ...importZod.configs.recommended,
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
