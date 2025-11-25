@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write"
   },
   "dependencies": {
     "next": "16.0.4",
@@ -22,6 +24,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.4",
+    "prettier": "3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
