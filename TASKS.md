@@ -13,7 +13,7 @@
 
 - [ ] Install PostgreSQL locally or use Docker container
 - [ ] Enable PostGIS extension: `CREATE EXTENSION postgis;`
-- [ ] Create database: `malawi_education`
+- [ ] Create database: `eduaccess-malawi`
 - [ ] Set up connection pooling (pg library)
 - [ ] Create `.env.local` with DATABASE_URL
 
