@@ -1,10 +1,15 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import nextVitals from "eslint-config-next/core-web-vitals"
+import nextTs from "eslint-config-next/typescript"
+import prettierConfig from "eslint-config-prettier/flat"
+import prettier from "eslint-plugin-prettier"
+import { defineConfig, globalIgnores } from "eslint/config"
+import importZod from "eslint-plugin-import-zod"
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  prettierConfig,
+  ...importZod.configs.recommended,
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -12,7 +17,20 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "node_modules",
+    ".vscode",
+    ".github",
+    "pnpm-lock.yaml",
   ]),
-]);
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    plugins: {
+      prettier,
+    },
+    rules: {
+      "prettier/prettier": "error",
+    },
+  },
+])
 
-export default eslintConfig;
+export default eslintConfig
