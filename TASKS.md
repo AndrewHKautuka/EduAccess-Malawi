@@ -4,9 +4,9 @@
 
 ### 1. Project Initialization
 
-- [ ] Create Next.js 16 project with TypeScript
-- [ ] Install dependencies: shadcn/ui, TailwindCSS v4, Lucide React, Zustand
-- [ ] Configure TypeScript strict mode
+- [x] Create Next.js 16 project with TypeScript
+- [x] Install dependencies: shadcn/ui, TailwindCSS v4, Lucide React, Zustand
+- [x] Configure TypeScript strict mode
 - [ ] Set up project structure
 
 ### 2. Database Setup
@@ -15,20 +15,20 @@
 - [ ] Enable PostGIS extension: `CREATE EXTENSION postgis;`
 - [ ] Create database: `eduaccess-malawi`
 - [ ] Set up connection pooling (pg library)
-- [ ] Create `.env.local` with DATABASE_URL
+- [ ] Create `.env.development` with DATABASE_URL
 
 ### 3. Schema Creation
 
-- [ ] Create spatial tables with geometry columns:
+- [ ] Create spatial tables with geometry columns
 - [ ] Create spatial indexes: `CREATE INDEX ON [table] USING GIST (geom);`
 - [ ] Add check constraints for valid geometries
 
 ### 4. Sample Data Loading
 
-- [ ] Source sample Malawi datasets (OpenStreetMap, HDX, government sources)
-- [ ] Write data import scripts (ogr2ogr or Node.js)
-- [ ] Load test data: 5-10 administrative areas, 20-30 schools, 50-100 settlements
-- [ ] Validate data: check geometry validity, coordinate system (EPSG:4326)
+- [ ] Source sample Malawi datasets (HDX)
+- [ ] Write data import scripts
+- [ ] Load test data
+- [ ] Validate data: check geometry validity, coordinate system
 
 ## Core Development
 
@@ -129,12 +129,3 @@
 - [ ] Explain coverage analysis methodology
 - [ ] Document data sources and assumptions
 - [ ] Add troubleshooting section
-
----
-
-## Priority Order for Week 1
-
-**Day 1-2**: Tasks 1-4 (Setup + Data)
-**Day 3-4**: Tasks 5-8 (Core Development)
-**Day 5-6**: Tasks 9-11 (UI + Analysis)
-**Day 7**: Tasks 13-16 (Testing + Docs)
