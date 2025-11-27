@@ -21,6 +21,7 @@ const eslintConfig = defineConfig([
     ".vscode",
     ".github",
     "pnpm-lock.yaml",
+    "drizzle",
   ]),
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
