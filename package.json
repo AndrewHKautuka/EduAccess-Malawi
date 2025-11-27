@@ -14,6 +14,10 @@
     "db:push": "dotenv -e .env.development -- pnpm drizzle-kit push",
     "db:gen": "dotenv -e .env.development -- pnpm drizzle-kit generate",
     "db:migrate": "dotenv -e .env.development -- pnpm drizzle-kit migrate",
+    "db:export": "dotenv -e .env.development -- pnpm drizzle-kit export",
+    "db:check": "dotenv -e .env.development -- pnpm drizzle-kit check",
+    "db:up": "dotenv -e .env.development -- pnpm drizzle-kit up",
+    "db:studio": "dotenv -e .env.development -- pnpm drizzle-kit studio",
     "prepare": "husky"
   },
   "dependencies": {
