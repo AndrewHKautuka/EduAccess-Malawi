@@ -11,6 +11,9 @@
     "format": "prettier --check",
     "format:fix": "prettier --write",
     "db:pull": "dotenv -e .env.development -- pnpm exec drizzle-kit pull",
+    "db:push": "dotenv -e .env.development -- pnpm exec drizzle-kit push",
+    "db:gen": "dotenv -e .env.development -- pnpm exec drizzle-kit generate",
+    "db:migrate": "dotenv -e .env.development -- pnpm exec drizzle-kit migrate",
     "prepare": "husky"
   },
   "dependencies": {
