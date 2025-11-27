@@ -8,3 +8,6 @@ build
 
 # Ignore husky
 .husky
+
+# Ignore Drizzle ORM output file
+drizzle
