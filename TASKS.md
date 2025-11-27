@@ -11,17 +11,17 @@
 
 ### 2. Database Setup
 
-- [ ] Install PostgreSQL locally or use Docker container
-- [ ] Enable PostGIS extension: `CREATE EXTENSION postgis;`
-- [ ] Create database: `eduaccess-malawi`
+- [x] Install PostgreSQL locally or use Docker container
+- [x] Enable PostGIS extension: `CREATE EXTENSION postgis;`
+- [x] Create database: `eduaccess-malawi`
 - [ ] Set up connection pooling (pg library)
-- [ ] Create `.env.development` with DATABASE_URL
+- [x] Create `.env.development` with DATABASE_URL
 
 ### 3. Schema Creation
 
-- [ ] Create spatial tables with geometry columns
-- [ ] Create spatial indexes: `CREATE INDEX ON [table] USING GIST (geom);`
-- [ ] Add check constraints for valid geometries
+- [x] Create spatial tables with geometry columns
+- [x] Create spatial indexes: `CREATE INDEX ON [table] USING GIST (geom);`
+- [x] Add check constraints for valid geometries
 
 ### 4. Sample Data Loading
 
@@ -34,7 +34,7 @@
 
 ### 5. Database Layer
 
-- [ ] Create connection helper file
+- [x] Create connection helper file
 - [ ] Write spatial query functions, e.g.:
   - `getSchools()`, `getPopulatedPlaces()`, `getBoundaries()`
   - `getSchoolsWithinRadius(lat, lng, radius)`
