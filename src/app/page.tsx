@@ -21,7 +21,7 @@ export default async function LandingPage() {
   const stat = coverageResult.data
 
   return (
-    <main className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center px-8 py-16">
+    <div className="flex flex-col items-center justify-center">
       <div className="max-w-3xl space-y-6 text-center">
         <h1 className="tracking-tight">Malawi School Accessibility Tool</h1>
 
@@ -43,6 +43,6 @@ export default async function LandingPage() {
         <ExampleStatCard stat={stat} />
         <ExampleCardList items={items} />
       </div>
-    </main>
+    </div>
   )
 }
