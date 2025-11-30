@@ -15,7 +15,7 @@ import { APP_SIDEBAR_ITEMS } from "../constants/app-sidebar-items"
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
