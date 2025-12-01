@@ -27,7 +27,7 @@ export function ThemeDropdownMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent side="right" align="start">
+      <DropdownMenuContent align="start">
         <DropdownMenuRadioGroup
           value={theme}
           onValueChange={(theme) => setTheme(theme as Theme)}
