@@ -36,7 +36,7 @@ export default async function LandingPage() {
           </Button>
 
           <Button variant="outline" asChild>
-            <Link href="/">Continue</Link>
+            <Link href="/map">Continue</Link>
           </Button>
         </div>
 
