@@ -1,5 +1,1 @@
-export const THEMES = {
-  LIGHT: "light",
-  DARK: "dark",
-  SYSTEM: "system",
-} as const
+export const THEMES = ["light", "dark", "system"] as const
