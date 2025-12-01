@@ -3,7 +3,13 @@
 import { useTheme } from "next-themes"
 import Link from "next/link"
 
-import { LucideIcon, MoonIcon, SunIcon, SunMoonIcon } from "lucide-react"
+import {
+  LogOutIcon,
+  LucideIcon,
+  MoonIcon,
+  SunIcon,
+  SunMoonIcon,
+} from "lucide-react"
 
 import {
   Sidebar,
@@ -63,7 +69,19 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarSeparator />
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href={"/"}>
+                <LogOutIcon />
+                <span>Exit</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }
