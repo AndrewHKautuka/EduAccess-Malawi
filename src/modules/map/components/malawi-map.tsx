@@ -1,4 +1,7 @@
+/* eslint-disable drizzle/enforce-delete-with-where */
 "use client"
+
+import { useEffect, useRef, useState } from "react"
 
 import dynamic from "next/dynamic"
 
@@ -15,13 +18,13 @@ import {
 import { useMapOptionsStore } from "../hooks/use-map-options-store"
 
 interface MalawiMapProps {
-  vectorLayers: VectorLayer[]
+  vectorLayers?: VectorLayer[]
   className?: string
 }
 
 const Map = dynamic(() => import("./map"), { ssr: false })
 
-export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
+export function MalawiMap({ vectorLayers = [], className }: MalawiMapProps) {
   const {
     adminBoundaryLevel,
     educationalFacilitiesChecked,
@@ -35,6 +38,10 @@ export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
       ...layer,
       config: AVAILABLE_LAYERS[layer.layerName],
     }))
+  const [loadedLayers, setLoadedLayers] =
+    useState<VectorLayerWithConfig[]>(validLayers)
+  const loadingRef = useRef<Set<string>>(new Set())
+  const layersRef = useRef<VectorLayerWithConfig[]>(validLayers)
 
   const selectedLayers = [
     educationalFacilitiesChecked && "education_facilities",
@@ -54,9 +61,64 @@ export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
     })(),
   ].filter((layer) => !!layer) as string[]
 
-  const layersToDisplay = validLayers.filter((layer) =>
-    selectedLayers.includes(layer.layerName)
-  )
+  useEffect(() => {
+    const loadLayer = async (layerName: string) => {
+      if (
+        loadingRef.current.has(layerName) ||
+        layersRef.current.some((layer) => layer.layerName === layerName)
+      ) {
+        return
+      }
+
+      loadingRef.current.add(layerName)
+
+      try {
+        const response = await fetch(`/api/map/layers/${layerName}`)
+
+        if (!response.ok) {
+          throw new Error(`Failed to load ${layerName}`)
+        }
+
+        const data: VectorLayerWithConfig = await response.json()
+        layersRef.current.push(data)
+        setLoadedLayers([...layersRef.current])
+      } catch (error) {
+        console.error(`Error loading layer ${layerName}:`, error)
+      } finally {
+        loadingRef.current.delete(layerName)
+      }
+    }
+
+    selectedLayers.forEach((layerName) => {
+      if (isValidLayer(layerName)) {
+        if (
+          !layersRef.current.some((layer) => layer.layerName === layerName) &&
+          !loadingRef.current.has(layerName)
+        ) {
+          loadLayer(layerName)
+        }
+      }
+    })
+  }, [selectedLayers])
+
+  const layersToDisplay: VectorLayerWithConfig[] = (() => {
+    return selectedLayers
+      .filter((layerName) => {
+        const layer = loadedLayers.find(
+          (layer) => layer.layerName === layerName
+        )
+        return layer && isValidLayer(layerName)
+      })
+      .map((layerName) => {
+        const layer = loadedLayers.find(
+          (layer) => layer.layerName === layerName
+        )!
+        return {
+          ...layer,
+          config: AVAILABLE_LAYERS[layerName],
+        }
+      })
+  })()
 
   return (
     <Map
