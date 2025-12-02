@@ -2,7 +2,9 @@
 
 import dynamic from "next/dynamic"
 
-import { VectorLayer } from "@/shared/types/layer-types"
+import { AVAILABLE_LAYERS } from "@/shared/constants/layer-constants"
+import { VectorLayer, VectorLayerWithConfig } from "@/shared/types/layer-types"
+import { isValidLayer } from "@/shared/utils/layer-utils"
 
 import {
   MAP_BOUNDS,
@@ -27,40 +29,34 @@ export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
     roadsChecked,
   } = useMapOptionsStore()
 
-  const educationalFacilitiesLayer =
-    educationalFacilitiesChecked &&
-    vectorLayers.find((layer) => layer.layerName === "educational_facilities")
+  const validLayers: VectorLayerWithConfig[] = vectorLayers
+    .filter((layer) => isValidLayer(layer.layerName))
+    .map((layer) => ({
+      ...layer,
+      config: AVAILABLE_LAYERS[layer.layerName],
+    }))
 
-  const populatedPlacesLayer =
-    populatedPlacesChecked &&
-    vectorLayers.find((layer) => layer.layerName === "populated_places")
+  const selectedLayers = [
+    educationalFacilitiesChecked && "education_facilities",
+    populatedPlacesChecked && "populated_places",
+    roadsChecked && "roads",
+    (() => {
+      switch (adminBoundaryLevel) {
+        case "National":
+          return "malawi"
+        case "Regional":
+          return "regions"
+        case "District":
+          return "districts"
+        case "Sub-district":
+          return "district_subdivisions"
+      }
+    })(),
+  ].filter((layer) => !!layer) as string[]
 
-  const roadsLayer =
-    roadsChecked && vectorLayers.find((layer) => layer.layerName === "roads")
-
-  const adminBoundaryLayer = vectorLayers.find((layer) => {
-    switch (adminBoundaryLevel) {
-      case "National": {
-        return layer.layerName === "malawi"
-      }
-      case "Regional": {
-        return layer.layerName === "regions"
-      }
-      case "District": {
-        return layer.layerName === "districts"
-      }
-      case "Sub-district": {
-        return layer.layerName === "district_subdivisions"
-      }
-    }
-  })
-
-  const layersToDisplay = [
-    educationalFacilitiesLayer,
-    populatedPlacesLayer,
-    roadsLayer,
-    adminBoundaryLayer,
-  ].filter((layer) => !!layer)
+  const layersToDisplay = validLayers.filter((layer) =>
+    selectedLayers.includes(layer.layerName)
+  )
 
   return (
     <Map
