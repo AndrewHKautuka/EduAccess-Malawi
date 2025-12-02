@@ -1,4 +1,4 @@
-import { drizzle as drizzleOrm } from "drizzle-orm/singlestore/driver"
+import { drizzle as drizzleOrm } from "drizzle-orm/node-postgres"
 
 import env from "@/config/env"
 
