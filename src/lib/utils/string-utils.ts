@@ -23,5 +23,5 @@ export function joinStringsHumanReadable(
 
   const joinedStrings = strings.toSpliced(-1).join(mainSeparator)
 
-  return `${joinedStrings}${endingSeparator}${strings[-1]}`
+  return `${joinedStrings}${endingSeparator}${strings.at(-1)}`
 }
