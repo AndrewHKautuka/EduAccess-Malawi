@@ -1,25 +1,24 @@
 "use server"
 
-import { SQL, sql, Subquery } from "drizzle-orm"
-import { PgColumn, PgTable } from "drizzle-orm/pg-core"
-import { PgViewBase } from "drizzle-orm/pg-core/view-base"
+import { sql } from "drizzle-orm"
 
 import { drizzle } from "@/lib/db/drizzle"
-import {
-  districts,
-  districtSubdivisions,
-  malawi,
-  regions,
-} from "@/lib/db/schema"
+import { malawi } from "@/lib/db/schema"
+import { joinStringsHumanReadable } from "@/lib/utils/string-utils"
+import { AVAILABLE_LAYERS } from "@/shared/constants/layer-constants"
 import {
   GeoJSONFeature,
   GeoJSONFeatureCollection,
   VectorLayer,
 } from "@/shared/types/layer-types"
 import { DataResult } from "@/shared/types/server-action-types"
+import { isValidLayer } from "@/shared/utils/layer-utils"
 
 export async function getAllVectorLayers(): DataResult<VectorLayer[]> {
-  const results = await Promise.all([getAllAdminBoundaryLayers()])
+  const results = await Promise.all([
+    getAllAdminBoundaryLayers(),
+    getAllInfrastructureLayers(),
+  ])
 
   let success = true
   const layers: VectorLayer[] = []
@@ -54,14 +53,46 @@ export async function getAllVectorLayers(): DataResult<VectorLayer[]> {
 export async function getAllAdminBoundaryLayers(): DataResult<VectorLayer[]> {
   const results = await Promise.all([
     getMalawiLayer(),
-    getVectorLayer("regions", regions, regions.id, regions.geom),
-    getVectorLayer("districts", districts, districts.id, districts.geom),
-    getVectorLayer(
-      "district_subdivisions",
-      districtSubdivisions,
-      districtSubdivisions.id,
-      districtSubdivisions.geom
-    ),
+    getVectorLayer("regions"),
+    getVectorLayer("districts"),
+    getVectorLayer("district_subdivisions"),
+  ])
+
+  let success = true
+  const layers: VectorLayer[] = []
+  const errors: (Error | null)[] = []
+  const messages: (string | undefined)[] = []
+  results.forEach((result) => {
+    if (!result.success) {
+      success = false
+      errors.push(result.error)
+    } else {
+      layers.push(result.data)
+      errors.push(null)
+    }
+    messages.push(result.message)
+  })
+
+  if (success) {
+    return {
+      success: true,
+      data: layers,
+      message: JSON.stringify(messages),
+    }
+  } else {
+    return {
+      success: false,
+      error: errors.find((error) => error != null)!,
+      message: JSON.stringify(messages),
+    }
+  }
+}
+
+export async function getAllInfrastructureLayers(): DataResult<VectorLayer[]> {
+  const results = await Promise.all([
+    getVectorLayer("education_facilities"),
+    getVectorLayer("populated_places"),
+    getVectorLayer("roads"),
   ])
 
   let success = true
@@ -140,23 +171,31 @@ export async function getMalawiLayer(): DataResult<VectorLayer> {
 }
 
 export async function getVectorLayer(
-  layerName: string,
-  from: PgTable | Subquery | PgViewBase | SQL,
-  idColumn: PgColumn,
-  geometryColumn: PgColumn
+  layerName: string
 ): DataResult<VectorLayer> {
   try {
+    if (!isValidLayer(layerName)) {
+      console.log(Object.keys(AVAILABLE_LAYERS))
+      return {
+        success: false,
+        error: Error("Invalid layerName"),
+        message: `${layerName} is not a valid layer name. The valid layer names are ${joinStringsHumanReadable(" and ", Object.keys(AVAILABLE_LAYERS))}`,
+      }
+    }
+
+    const layerConfig = AVAILABLE_LAYERS[layerName]
+
     const result = await drizzle
       .select({
         feature: sql<GeoJSONFeature>`
         jsonb_build_object(
           'type', 'Feature',
-          'id', ${idColumn},
-          'geometry', ST_AsGeoJSON(${geometryColumn})::jsonb,
-          'properties', to_jsonb(${from}.*) - 'geom' - 'id'
+          'id', ${layerConfig.idColumn},
+          'geometry', ST_AsGeoJSON(${layerConfig.geometryColumn})::jsonb,
+          'properties', to_jsonb(${layerConfig.table}.*) - 'geom' - 'id'
         )`.as("feature"),
       })
-      .from(from)
+      .from(layerConfig.table)
 
     const featureCollection: GeoJSONFeatureCollection = {
       type: "FeatureCollection",
