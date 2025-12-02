@@ -20,7 +20,23 @@ interface MalawiMapProps {
 const Map = dynamic(() => import("./map"), { ssr: false })
 
 export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
-  const { adminBoundaryLevel } = useMapOptionsStore()
+  const {
+    adminBoundaryLevel,
+    educationalFacilitiesChecked,
+    populatedPlacesChecked,
+    roadsChecked,
+  } = useMapOptionsStore()
+
+  const educationalFacilitiesLayer =
+    educationalFacilitiesChecked &&
+    vectorLayers.find((layer) => layer.layerName === "educational_facilities")
+
+  const populatedPlacesLayer =
+    populatedPlacesChecked &&
+    vectorLayers.find((layer) => layer.layerName === "populated_places")
+
+  const roadsLayer =
+    roadsChecked && vectorLayers.find((layer) => layer.layerName === "roads")
 
   const adminBoundaryLayer = vectorLayers.find((layer) => {
     switch (adminBoundaryLevel) {
@@ -39,7 +55,12 @@ export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
     }
   })
 
-  const layersToDisplay = [...(adminBoundaryLayer ? [adminBoundaryLayer] : [])]
+  const layersToDisplay = [
+    educationalFacilitiesLayer,
+    populatedPlacesLayer,
+    roadsLayer,
+    adminBoundaryLayer,
+  ].filter((layer) => !!layer)
 
   return (
     <Map
