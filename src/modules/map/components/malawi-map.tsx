@@ -22,11 +22,24 @@ const Map = dynamic(() => import("./map"), { ssr: false })
 export function MalawiMap({ vectorLayers, className }: MalawiMapProps) {
   const { adminBoundaryLevel } = useMapOptionsStore()
 
-  const malawiLayer = vectorLayers.find((layer) => layer.layerName === "malawi")
+  const adminBoundaryLayer = vectorLayers.find((layer) => {
+    switch (adminBoundaryLevel) {
+      case "National": {
+        return layer.layerName === "malawi"
+      }
+      case "Regional": {
+        return layer.layerName === "regions"
+      }
+      case "District": {
+        return layer.layerName === "districts"
+      }
+      case "Sub-district": {
+        return layer.layerName === "district_subdivisions"
+      }
+    }
+  })
 
-  const layersToDisplay = [
-    ...(adminBoundaryLevel === "National" && malawiLayer ? [malawiLayer] : []),
-  ]
+  const layersToDisplay = [...(adminBoundaryLayer ? [adminBoundaryLayer] : [])]
 
   return (
     <Map
