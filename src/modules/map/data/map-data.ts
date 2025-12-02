@@ -153,7 +153,7 @@ export async function getVectorLayer(
           'type', 'Feature',
           'id', ${idColumn},
           'geometry', ST_AsGeoJSON(${geometryColumn})::jsonb,
-          'properties', to_jsonb(tableName.*) - 'geom' - 'id'
+          'properties', to_jsonb(${from}.*) - 'geom' - 'id'
         )`.as("feature"),
       })
       .from(from)
@@ -174,6 +174,7 @@ export async function getVectorLayer(
     return {
       success: false,
       error: Error(`Database Error: ${error}`),
+      message: `Failed to fetch ${layerName} vector layer`,
     }
   }
 }
