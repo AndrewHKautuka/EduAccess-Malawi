@@ -1,26 +1,23 @@
 import { MalawiMap } from "~/map/components/malawi-map"
 import { MapOptionsCard } from "~/map/components/map-options-card"
-import { getMalawiLayer } from "~/map/data/map-data"
+import { getAllVectorLayers } from "~/map/data/map-data"
 
 import { VectorLayer } from "@/shared/types/layer-types"
 
 export default async function MapPage() {
-  console.log("Fetching Malawi Layer")
+  const result = await getAllVectorLayers()
 
-  const malawiLayerResult = await getMalawiLayer()
-
-  if (!malawiLayerResult.success) {
-    console.error("Failed to fetch Malawi Layer")
+  if (!result.success) {
     return (
       <div className="text-red-600">
-        {malawiLayerResult.error.message}
+        {result.error.message}
         <br />
-        {malawiLayerResult.message}
+        {result.message}
       </div>
     )
   }
 
-  const vectorLayers: VectorLayer[] = [malawiLayerResult.data]
+  const vectorLayers: VectorLayer[] = result.data
 
   return (
     <div className="flex items-center justify-center">
