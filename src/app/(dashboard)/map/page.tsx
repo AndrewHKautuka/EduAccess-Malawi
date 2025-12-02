@@ -1,23 +1,51 @@
 import { MalawiMap } from "~/map/components/malawi-map"
 import { MapOptionsCard } from "~/map/components/map-options-card"
-import { getAllVectorLayers } from "~/map/data/map-data"
+import { getAllAdminBoundaryLayers, getVectorLayer } from "~/map/data/map-data"
 
 import { VectorLayer } from "@/shared/types/layer-types"
 
 export default async function MapPage() {
-  const result = await getAllVectorLayers()
+  const adminBoundaryResult = await getAllAdminBoundaryLayers()
 
-  if (!result.success) {
+  if (!adminBoundaryResult.success) {
     return (
       <div className="text-red-600">
-        {result.error.message}
+        {adminBoundaryResult.error.message}
         <br />
-        {result.message}
+        {adminBoundaryResult.message}
       </div>
     )
   }
 
-  const vectorLayers: VectorLayer[] = result.data
+  const educationFacilitiesResult = await getVectorLayer("education_facilities")
+
+  if (!educationFacilitiesResult.success) {
+    return (
+      <div className="text-red-600">
+        {educationFacilitiesResult.error.message}
+        <br />
+        {educationFacilitiesResult.message}
+      </div>
+    )
+  }
+
+  const populatedPlacesResult = await getVectorLayer("populated_places")
+
+  if (!populatedPlacesResult.success) {
+    return (
+      <div className="text-red-600">
+        {populatedPlacesResult.error.message}
+        <br />
+        {populatedPlacesResult.message}
+      </div>
+    )
+  }
+
+  const vectorLayers: VectorLayer[] = [
+    ...adminBoundaryResult.data,
+    educationFacilitiesResult.data,
+    populatedPlacesResult.data,
+  ]
 
   return (
     <div className="flex items-center justify-center">
