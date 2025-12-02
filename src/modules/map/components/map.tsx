@@ -4,7 +4,7 @@ import { LatLngBoundsExpression, LatLngExpression } from "leaflet"
 import "leaflet-defaulticon-compatibility"
 import { GeoJSON, MapContainer, TileLayer } from "react-leaflet"
 
-import { VectorLayer } from "@/shared/types/layer-types"
+import { VectorLayerWithConfig } from "@/shared/types/layer-types"
 
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 import "leaflet/dist/leaflet.css"
@@ -12,7 +12,7 @@ import "leaflet/dist/leaflet.css"
 interface MapProps {
   position: LatLngExpression
   bounds?: LatLngBoundsExpression
-  vectorLayers?: VectorLayer[]
+  vectorLayers?: VectorLayerWithConfig[]
   zoom: number
   minZoom?: number
   className?: string
@@ -43,17 +43,7 @@ export default function Map({
         <GeoJSON
           key={layer.layerName}
           data={layer.data}
-          style={(feature) => ({
-            color: feature?.geometry.type === "Polygon" ? "purple" : "black",
-            weight: 2,
-            opacity: 0.8,
-            fillOpacity: 0.5,
-          })}
-          onEachFeature={(feature, layer) => {
-            if (feature.properties && feature.properties.popupContent) {
-              layer.bindPopup(feature.properties.popupContent)
-            }
-          }}
+          style={() => layer.config.defaultStyle}
         />
       ))}
     </MapContainer>
