@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useId } from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils"
 
 import { ADMIN_BOUNDARY_LEVELS } from "../constants/map-constants"
+import { useMapOptionsStore } from "../hooks/use-map-options-store"
 import { AdminBoundaryLevel } from "../types/map-types"
 
 interface MapOptionsCardProps {
@@ -29,10 +30,7 @@ export function MapOptionsCard({ className }: MapOptionsCardProps) {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <LayerToggles />
-
-        <OptionsSection title="Admin Boundary Level">
-          <AdminBoundarySelect initialLevel="National" />
-        </OptionsSection>
+        <AdminBoundarySelect />
       </CardContent>
     </Card>
   )
@@ -53,54 +51,79 @@ function OptionsSection({ title, children }: OptionsSectionProps) {
 }
 
 function LayerToggles() {
+  const {
+    educationalFacilitiesChecked,
+    setEducationalFacilitiesChecked,
+    populatedPlacesChecked,
+    setPopulatedPlacesChecked,
+    roadsChecked,
+    setRoadsChecked,
+  } = useMapOptionsStore()
+
   return (
     <OptionsSection title="Vector Layer Toggles">
-      <LayerToggle layerLabel="Educational Facilities" />
-      <LayerToggle layerLabel="Populated Places" />
-      <LayerToggle layerLabel="Roads" />
+      <LayerToggle
+        layerLabel="Educational Facilities"
+        checked={educationalFacilitiesChecked}
+        setChecked={setEducationalFacilitiesChecked}
+      />
+      <LayerToggle
+        layerLabel="Populated Places"
+        checked={populatedPlacesChecked}
+        setChecked={setPopulatedPlacesChecked}
+      />
+      <LayerToggle
+        layerLabel="Roads"
+        checked={roadsChecked}
+        setChecked={setRoadsChecked}
+      />
     </OptionsSection>
   )
 }
 
 interface LayerToggleProps {
   layerLabel: string
+  checked: boolean
+  setChecked: (checked: boolean) => void
 }
 
-function LayerToggle({ layerLabel }: LayerToggleProps) {
+function LayerToggle({ layerLabel, checked, setChecked }: LayerToggleProps) {
   const id = useId()
 
   return (
     <div className="flex items-center gap-3">
-      <Checkbox id={id} />
+      <Checkbox
+        id={id}
+        checked={checked}
+        onCheckedChange={(checked) => setChecked(checked === true)}
+      />
       <Label htmlFor={id}>{layerLabel}</Label>
     </div>
   )
 }
 
-interface AdminSelectProps {
-  initialLevel: AdminBoundaryLevel
-}
-
-function AdminBoundarySelect({ initialLevel }: AdminSelectProps) {
-  const [adminBoundaryLevel, setAdminBoundaryLevel] = useState(initialLevel)
+function AdminBoundarySelect() {
+  const { adminBoundaryLevel, setAdminBoundaryLevel } = useMapOptionsStore()
 
   return (
-    <Select
-      value={adminBoundaryLevel}
-      onValueChange={(value) =>
-        setAdminBoundaryLevel(value as AdminBoundaryLevel)
-      }
-    >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder="Admin Boundary" />
-      </SelectTrigger>
-      <SelectContent>
-        {ADMIN_BOUNDARY_LEVELS.map((adminBoundaryLevel) => (
-          <SelectItem key={adminBoundaryLevel} value={adminBoundaryLevel}>
-            {adminBoundaryLevel}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <OptionsSection title="Admin Boundary Level">
+      <Select
+        value={adminBoundaryLevel}
+        onValueChange={(value) =>
+          setAdminBoundaryLevel(value as AdminBoundaryLevel)
+        }
+      >
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Admin Boundary" />
+        </SelectTrigger>
+        <SelectContent>
+          {ADMIN_BOUNDARY_LEVELS.map((adminBoundaryLevel) => (
+            <SelectItem key={adminBoundaryLevel} value={adminBoundaryLevel}>
+              {adminBoundaryLevel}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </OptionsSection>
   )
 }
