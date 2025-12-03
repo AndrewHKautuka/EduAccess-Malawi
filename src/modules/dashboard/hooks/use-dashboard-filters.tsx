@@ -1,3 +1,4 @@
+"use client"
 import { useCallback, useEffect } from "react"
 
 import type { DashboardFiltersInput } from "~/dashboard/validations/dashboard-validations"
