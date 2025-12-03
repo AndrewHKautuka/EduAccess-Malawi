@@ -5,7 +5,6 @@ import {
   malawi,
   populatedPlaces,
   regions,
-  roads,
 } from "@/lib/db/schema"
 
 import { VectorLayerConfig } from "../types/layer-types"
@@ -71,16 +70,6 @@ export const AVAILABLE_LAYERS: Record<string, VectorLayerConfig> = {
     table: populatedPlaces,
     idColumn: populatedPlaces.id,
     geometryColumn: populatedPlaces.geom,
-    defaultStyle: {
-      color: "#555555",
-      weight: 3,
-      opacity: 0.7,
-    },
-  },
-  roads: {
-    table: roads,
-    idColumn: roads.id,
-    geometryColumn: roads.geom,
     defaultStyle: {
       color: "#555555",
       weight: 3,

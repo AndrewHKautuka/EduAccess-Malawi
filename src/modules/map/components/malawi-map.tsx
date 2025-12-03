@@ -34,7 +34,6 @@ export function MalawiMap({ vectorLayers = [], className }: MalawiMapProps) {
     adminBoundaryLevel,
     educationalFacilitiesChecked,
     populatedPlacesChecked,
-    roadsChecked,
   } = useMapOptionsStore()
 
   const validLayers: VectorLayerWithConfig[] = vectorLayers
@@ -59,7 +58,6 @@ export function MalawiMap({ vectorLayers = [], className }: MalawiMapProps) {
   const selectedLayers = [
     educationalFacilitiesChecked && "education_facilities",
     populatedPlacesChecked && "populated_places",
-    roadsChecked && "roads",
     (() => {
       switch (adminBoundaryLevel) {
         case "National":

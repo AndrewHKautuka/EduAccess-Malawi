@@ -16,5 +16,4 @@ export const MAP_RELOAD_LAYER_DEBOUNCE_PERIOD: number = 250
 export const BBOX_FILTERED_LAYERS = new Set<keyof typeof AVAILABLE_LAYERS>([
   "education_facilities",
   "populated_places",
-  "roads",
 ])

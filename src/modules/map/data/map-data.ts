@@ -92,7 +92,6 @@ export async function getAllInfrastructureLayers(): DataResult<VectorLayer[]> {
   const results = await Promise.all([
     getVectorLayer("education_facilities"),
     getVectorLayer("populated_places"),
-    getVectorLayer("roads"),
   ])
 
   let success = true

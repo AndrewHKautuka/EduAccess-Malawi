@@ -56,8 +56,6 @@ function LayerToggles() {
     setEducationalFacilitiesChecked,
     populatedPlacesChecked,
     setPopulatedPlacesChecked,
-    roadsChecked,
-    setRoadsChecked,
   } = useMapOptionsStore()
 
   return (
@@ -71,11 +69,6 @@ function LayerToggles() {
         layerLabel="Populated Places"
         checked={populatedPlacesChecked}
         setChecked={setPopulatedPlacesChecked}
-      />
-      <LayerToggle
-        layerLabel="Roads"
-        checked={roadsChecked}
-        setChecked={setRoadsChecked}
       />
     </OptionsSection>
   )
