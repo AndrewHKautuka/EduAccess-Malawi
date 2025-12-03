@@ -130,13 +130,13 @@ export const roads = pgTable(
 )
 export const geographyColumns = pgView("geography_columns", {
   // TODO: failed to parse database type 'name'
-  fTableCatalog: unknown("f_table_catalog"),
+  fTableCatalog: text("f_table_catalog"),
   // TODO: failed to parse database type 'name'
-  fTableSchema: unknown("f_table_schema"),
+  fTableSchema: text("f_table_schema"),
   // TODO: failed to parse database type 'name'
-  fTableName: unknown("f_table_name"),
+  fTableName: text("f_table_name"),
   // TODO: failed to parse database type 'name'
-  fGeographyColumn: unknown("f_geography_column"),
+  fGeographyColumn: text("f_geography_column"),
   coordDimension: integer("coord_dimension"),
   srid: integer(),
   type: text(),
@@ -147,11 +147,11 @@ export const geographyColumns = pgView("geography_columns", {
 export const geometryColumns = pgView("geometry_columns", {
   fTableCatalog: varchar("f_table_catalog", { length: 256 }),
   // TODO: failed to parse database type 'name'
-  fTableSchema: unknown("f_table_schema"),
+  fTableSchema: text("f_table_schema"),
   // TODO: failed to parse database type 'name'
-  fTableName: unknown("f_table_name"),
+  fTableName: text("f_table_name"),
   // TODO: failed to parse database type 'name'
-  fGeometryColumn: unknown("f_geometry_column"),
+  fGeometryColumn: text("f_geometry_column"),
   coordDimension: integer("coord_dimension"),
   srid: integer(),
   type: varchar({ length: 30 }),
