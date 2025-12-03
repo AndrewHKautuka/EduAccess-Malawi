@@ -171,7 +171,8 @@ export async function getMalawiLayer(): DataResult<VectorLayer> {
 }
 
 export async function getVectorLayer(
-  layerName: string
+  layerName: string,
+  bbox?: [number, number, number, number] // [minLng, minLat, maxLng, maxLat]
 ): DataResult<VectorLayer> {
   try {
     if (!isValidLayer(layerName)) {
@@ -185,7 +186,7 @@ export async function getVectorLayer(
 
     const layerConfig = AVAILABLE_LAYERS[layerName]
 
-    const result = await drizzle
+    let query = drizzle
       .select({
         feature: sql<GeoJSONFeature>`
         jsonb_build_object(
@@ -196,6 +197,19 @@ export async function getVectorLayer(
         )`.as("feature"),
       })
       .from(layerConfig.table)
+
+    // Apply bounding box filter if provided
+    if (bbox) {
+      const [minLng, minLat, maxLng, maxLat] = bbox
+      query = query.where(
+        sql`ST_Intersects(
+          ${layerConfig.geometryColumn},
+          ST_MakeEnvelope(${sql.raw(String(minLng))}, ${sql.raw(String(minLat))}, ${sql.raw(String(maxLng))}, ${sql.raw(String(maxLat))}, 4326)
+        )`
+      ) as typeof query
+    }
+
+    const result = await query
 
     const featureCollection: GeoJSONFeatureCollection = {
       type: "FeatureCollection",
