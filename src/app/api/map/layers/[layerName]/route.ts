@@ -6,7 +6,7 @@ import { AVAILABLE_LAYERS } from "@/shared/constants/layer-constants"
 import { isValidLayer } from "@/shared/utils/layer-utils"
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ layerName: string }> }
 ) {
   const { layerName } = await params
@@ -21,7 +21,19 @@ export async function GET(
     )
   }
 
-  const result = await getVectorLayer(layerName)
+  // Parse bounding box from query parameters if provided
+  // Format: bbox=minLng,minLat,maxLng,maxLat
+  const bboxParam = request.nextUrl.searchParams.get("bbox")
+  let bbox: [number, number, number, number] | undefined
+
+  if (bboxParam) {
+    const bboxValues = bboxParam.split(",").map(Number)
+    if (bboxValues.length === 4 && bboxValues.every((val) => !isNaN(val))) {
+      bbox = bboxValues as [number, number, number, number]
+    }
+  }
+
+  const result = await getVectorLayer(layerName, bbox)
 
   if (result.success) {
     return NextResponse.json(result.data, {
