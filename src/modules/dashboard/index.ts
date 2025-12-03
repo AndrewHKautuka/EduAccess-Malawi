@@ -1,0 +1,12 @@
+// Barrel file for dashboard module exports
+export * from "./components/comparative-charts"
+export * from "./components/dashboard-header"
+export { DashboardStats as DashboardStatsComponent } from "./components/dashboard-stats"
+export * from "./components/metric-cards"
+export * from "./components/subdivision-selector"
+export * from "./hooks/use-dashboard-data"
+export * from "./hooks/use-dashboard-filters"
+export * from "./types/dashboard-types"
+export type { DashboardStats as DashboardStatsType } from "./types/dashboard-types"
+export * from "./utils/dashboard-utils"
+export * from "./validations/dashboard-validations"
