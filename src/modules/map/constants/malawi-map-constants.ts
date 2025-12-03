@@ -7,3 +7,5 @@ export const MAP_BOUNDS: LatLngBoundsExpression = [
 ]
 export const MAP_MIN_ZOOM: number = 7
 export const MAP_INITIAL_ZOOM: number = MAP_MIN_ZOOM
+
+export const MAP_RELOAD_LAYER_DEBOUNCE_PERIOD: number = 250
